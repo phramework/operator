@@ -94,7 +94,7 @@ class OperatorTest extends \PHPUnit_Framework_TestCase
         );
 
         foreach ($operators as $operator) {
-            $value = (string)rand(0, 100);
+            $value = (string) random_int(0, 100);
 
             $provider[] = [
                 sprintf(

@@ -17,61 +17,60 @@
 namespace Phramework\Operator;
 
 /**
- * Operator's model
+ * Operators
  * @license https://www.apache.org/licenses/LICENSE-2.0 Apache-2.0
  * @author Xenofon Spafaridis <nohponex@gmail.com>
  * @since 0.0.0
  */
 class Operator
 {
-    const OPERATOR_ISSET = 'isset';
-    const OPERATOR_NOT_ISSET = '!isset';
-    const OPERATOR_GREATER = '>';
-    const OPERATOR_GREATER_EQUAL = '>=';
-    const OPERATOR_LESS = '<';
-    const OPERATOR_LESS_EQUAL = '<=';
-    const OPERATOR_EQUAL = '=';
-    const OPERATOR_NOT_EQUAL = '!=';
-    const OPERATOR_ISNULL = 'ISNULL';
-    const OPERATOR_NOT_ISNULL = '!ISNULL';
-    const OPERATOR_EMPTY = 'empty';
-    const OPERATOR_NOT_EMPTY = '!empty';
-    const OPERATOR_LIKE = '~~';
-    const OPERATOR_NOT_LIKE = '!~~';
-    const OPERATOR_IN = 'IN';
-    const OPERATOR_NOT_IN = 'NOT IN';
-
+    const ISSET = 'isset';
+    const NOT_ISSET = '!isset';
+    const GREATER = '>';
+    const GREATER_EQUAL = '>=';
+    const LESS = '<';
+    const LESS_EQUAL = '<=';
+    const EQUAL = '=';
+    const NOT_EQUAL = '!=';
+    const ISNULL = 'ISNULL';
+    const NOT_ISNULL = '!ISNULL';
+    const EMPTY = 'empty';
+    const NOT_EMPTY = '!empty';
+    const LIKE = '~~';
+    const NOT_LIKE = '!~~';
+    const IN = 'IN';
+    const NOT_IN = 'NOT IN';
     /**
      * ∈, is an element of array *(URL encoded : `%E2%88%88"`)*
      */
-    const OPERATOR_IN_ARRAY = '∈';
+    const IN_ARRAY = '∈';
     /**
      * ∉, is not an element of array *(URL encoded : `%E2%88%89`)*
      */
-    const OPERATOR_NOT_IN_ARRAY = '∉';
+    const NOT_IN_ARRAY = '∉';
 
     /**
      * @var string[]
      */
     protected static $operators = [
-        Operator::OPERATOR_EMPTY,
-        Operator::OPERATOR_EQUAL,
-        Operator::OPERATOR_GREATER,
-        Operator::OPERATOR_GREATER_EQUAL,
-        Operator::OPERATOR_ISSET,
-        Operator::OPERATOR_LESS,
-        Operator::OPERATOR_LESS_EQUAL,
-        Operator::OPERATOR_NOT_EMPTY,
-        Operator::OPERATOR_NOT_EQUAL,
-        Operator::OPERATOR_NOT_ISSET,
-        Operator::OPERATOR_ISNULL,
-        Operator::OPERATOR_NOT_ISNULL,
-        Operator::OPERATOR_IN,
-        Operator::OPERATOR_NOT_IN,
-        Operator::OPERATOR_LIKE,
-        Operator::OPERATOR_NOT_LIKE,
-        Operator::OPERATOR_IN_ARRAY,
-        Operator::OPERATOR_NOT_IN_ARRAY
+        Operator::EMPTY,
+        Operator::EQUAL,
+        Operator::GREATER,
+        Operator::GREATER_EQUAL,
+        Operator::ISSET,
+        Operator::LESS,
+        Operator::LESS_EQUAL,
+        Operator::NOT_EMPTY,
+        Operator::NOT_EQUAL,
+        Operator::NOT_ISSET,
+        Operator::ISNULL,
+        Operator::NOT_ISNULL,
+        Operator::IN,
+        Operator::NOT_IN,
+        Operator::LIKE,
+        Operator::NOT_LIKE,
+        Operator::IN_ARRAY,
+        Operator::NOT_IN_ARRAY
     ];
 
     /**
@@ -88,14 +87,15 @@ class Operator
      * @param  string $operator
      * @param  string $attributeName
      *     *[Optional]* Attribute's name, used for thrown exception
-     * @throws \Phramework\Exceptions\IncorrectParametersException
+     * @throws \Exception
      * @return string Returns the operator
+     * @todo
      */
     public static function validate($operator, $attributeName = 'operator')
     {
         if (!in_array($operator, self::$operators)) {
-            throw new \Phramework\Exceptions\IncorrectParametersException(
-                [$attributeName]
+            throw new \Exception(
+                $attributeName
             );
         }
 
@@ -179,7 +179,7 @@ class Operator
      */
     public static function parse($operatorValueString)
     {
-        $operator = Operator::OPERATOR_EQUAL;
+        $operator = Operator::EQUAL;
         $value = $operatorValueString;
 
         $operators = implode(
@@ -234,8 +234,8 @@ class Operator
     public static function getNullableOperators()
     {
         return [
-            Operator::OPERATOR_ISNULL,
-            Operator::OPERATOR_NOT_ISNULL
+            Operator::ISNULL,
+            Operator::NOT_ISNULL
         ];
     }
 
@@ -245,8 +245,8 @@ class Operator
     public static function getLikeOperators()
     {
         return [
-            Operator::OPERATOR_LIKE,
-            Operator::OPERATOR_NOT_LIKE
+            Operator::LIKE,
+            Operator::NOT_LIKE
         ];
     }
 
@@ -256,8 +256,8 @@ class Operator
     public static function getEqualityOperators()
     {
         return [
-            Operator::OPERATOR_EQUAL,
-            Operator::OPERATOR_NOT_EQUAL
+            Operator::EQUAL,
+            Operator::NOT_EQUAL
         ];
     }
 
@@ -267,8 +267,8 @@ class Operator
     public static function getInOperators()
     {
         return [
-            Operator::OPERATOR_IN,
-            Operator::OPERATOR_NOT_IN
+            Operator::IN,
+            Operator::NOT_IN
         ];
     }
 
@@ -278,8 +278,8 @@ class Operator
     public static function getInArrayOperators()
     {
         return [
-            Operator::OPERATOR_IN_ARRAY,
-            Operator::OPERATOR_NOT_IN_ARRAY
+            Operator::IN_ARRAY,
+            Operator::NOT_IN_ARRAY
         ];
     }
 
@@ -289,12 +289,12 @@ class Operator
     public static function getOrderableOperators()
     {
         return [
-            Operator::OPERATOR_EQUAL,
-            Operator::OPERATOR_NOT_EQUAL,
-            Operator::OPERATOR_GREATER_EQUAL,
-            Operator::OPERATOR_GREATER,
-            Operator::OPERATOR_LESS_EQUAL,
-            Operator::OPERATOR_LESS
+            Operator::EQUAL,
+            Operator::NOT_EQUAL,
+            Operator::GREATER_EQUAL,
+            Operator::GREATER,
+            Operator::LESS_EQUAL,
+            Operator::LESS
         ];
     }
 }

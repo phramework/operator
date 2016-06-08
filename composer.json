@@ -48,6 +48,6 @@
       "phpunit"
     ],
     "phpunit": "phpunit",
-    "lint": "phpcs -p -s --standard=PSR2 ./src"
+    "lint": "phpcs -p -s --standard=PSR2 ./src ./tests"
   }
 }
