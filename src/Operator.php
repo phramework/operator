@@ -30,7 +30,7 @@ class Operator
     const GREATER_EQUAL = '>=';
     const LESS = '<';
     const LESS_EQUAL = '<=';
-    const EQUAL = '=';
+    const EQUAL = '==';
     const NOT_EQUAL = '!=';
     const ISNULL = 'ISNULL';
     const NOT_ISNULL = '!ISNULL';
@@ -74,6 +74,17 @@ class Operator
     ];
 
     /**
+     * Define common operator aliases
+     */
+    const ALIASES = [
+        'gt'  => Operator::GREATER,
+        'gte' => Operator::GREATER_EQUAL,
+        'lt'  => Operator::LESS,
+        'lte' => Operator::LESS_EQUAL,
+        '<>'  => Operator::NOT_EQUAL
+    ];
+
+    /**
      * @return string[]
      * @since 1.2.0
      */
@@ -82,41 +93,90 @@ class Operator
         return self::$operators;
     }
 
+
+    /**
+     * @param string $operator
+     * @return string
+     */
+    public static function getCanonical(string $operator) : string
+    {
+        //Replace if operator is an alias
+        if (array_key_exists($operator, Operator::ALIASES)) {
+            return Operator::ALIASES[$operator];
+        }
+
+        return $operator;
+    }
+
     /**
      * Check if a string is a valid operator
      * @param  string $operator
-     * @param  string $attributeName
-     *     *[Optional]* Attribute's name, used for thrown exception
-     * @throws \Exception
+     * @param  string $attributeName Optional attribute's name, used for thrown exception
+     * @throws \DomainException
      * @return string Returns the operator
-     * @todo
+     * @todo change attribute name to Source
      */
-    public static function validate($operator, $attributeName = 'operator')
-    {
+    public static function validate(
+        string $operator,
+        $attributeName = null
+    ) : string {
+        $operator = Operator::getCanonical($operator);
+
         if (!in_array($operator, self::$operators)) {
-            throw new \Exception(
-                $attributeName
+            throw new \DomainException(
+                $attributeName !== null
+                ?  sprintf(
+                    'Invalid operator "%s" for attribute "%s"',
+                    $operator,
+                    $attributeName
+                )
+                : sprintf(
+                    'Invalid operator "%s"',
+                    $operator
+                )
             );
         }
 
         return $operator;
     }
 
+    /**
+     * Operators which can compare if values are same or not
+     */
     const CLASS_COMPARABLE = 1;
+
+    /**
+     * Operators witch can compare if an value is greater or less than another
+     */
     const CLASS_ORDERABLE = 2;
+    /**
+     * Can search if a string exists in a text
+     */
     const CLASS_LIKE = 4;
+    /**
+     * Can search if a values is in the allowed list
+     */
     const CLASS_IN = 8;
+    /**
+     * Can search if an array of values contains a certain value
+     */
     const CLASS_IN_ARRAY = 32;
+    /**
+     * Values that can be null
+     */
     const CLASS_NULLABLE = 64;
+    /**
+     * Apply operators in JSON structured values
+     */
     const CLASS_JSONOBJECT = 128;
 
     /**
      * Get operators
-     * @param  integer $classFlags
-     * @return integer Operator class
-     * @throws \Exception When invalid operator class flags are given
+     * @param  int $classFlags
+     * @return int Operator class
+     * @throws \DomainException When invalid operator class flags are given
      */
-    public static function getByClassFlags($classFlags)
+    public static function getByClassFlags(int $classFlags)
     {
         $operators = [];
 
@@ -163,7 +223,7 @@ class Operator
         }
 
         if (empty($operators) && ($classFlags & Operator::CLASS_JSONOBJECT) === 0) {
-            throw new \Exception('Invalid operator class flags');
+            throw new \DomainException('Invalid operator class flags');
         }
 
         return array_unique($operators);
@@ -176,6 +236,7 @@ class Operator
      * ```php
      * list($operator, $operand) = Operator::parse('>=5');
      * ```
+     * @todo use aliases
      */
     public static function parse($operatorValueString)
     {
@@ -230,6 +291,7 @@ class Operator
 
     /**
      * @return string[]
+     * @see Operator::CLASS_NULLABLE
      */
     public static function getNullableOperators()
     {
