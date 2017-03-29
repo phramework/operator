@@ -30,7 +30,7 @@ class Operator
     const GREATER_EQUAL = '>=';
     const LESS = '<';
     const LESS_EQUAL = '<=';
-    const EQUAL = '==';
+    const EQUAL = '=';
     const NOT_EQUAL = '!=';
     const ISNULL = 'ISNULL';
     const NOT_ISNULL = '!ISNULL';
